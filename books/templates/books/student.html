@@ -1,0 +1,20 @@
+{% extends "books/layout.html" %}
+
+{% block body %}
+<h1>Student: {{ student.first }} {{ student.last }} ({{ student.tup_id }})</h1>
+    <h2>Borrowing History</h2>
+    <ul>
+        {% for borrow in borrows %}
+            <li>
+                Book: <a href="{% url 'library:book' borrow.borrowing.id %}">{{ borrow.borrowing.title }}</a><br>
+                Borrowed at: {{ borrow.borrowed_date|date:"H:i m-d-Y" }}<br>
+                Due by: {{ borrow.due_date|date:"H:i m-d-Y" }}<br>
+                Duration: {{ borrow.duration_hours }} hours<br>
+                Status: {{ borrow.status }}
+            </li>
+        {% empty %}
+            <li>No borrowing history</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'library:index' %}">Back to Library</a>
+{% endblock %}

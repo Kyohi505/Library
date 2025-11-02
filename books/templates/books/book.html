@@ -1,0 +1,57 @@
+{% extends "books/layout.html" %}
+
+{% block body %}
+    <h1>No.{{book.id}} {{book.title}}</h1>
+
+    <ul>
+        <li>
+            Author/s:
+            {% for author in book.author.all %}
+                {{ author.name }}
+                {% if not forloop.last %}, 
+                {% endif %}
+            {% empty %}
+                No authors listed
+            {% endfor %}
+        </li>
+
+        <li>
+            Publication Year: {{book.publication_year}}
+        </li>
+        <li>
+            Related Subject/s:             
+            {% for subject in book.subject.all %}
+                {{ subject.name }}
+                {% if not forloop.last %}, 
+                {% endif %}
+            {% empty %}
+                No subject listed
+            {% endfor %}
+        </li>
+    </ul>
+
+    <div>
+        <h1>
+            Description
+        </h1>
+         {{ book.description }}
+    </div>
+
+    <div>
+        <h1>Status:</h1>
+        <p>{% if borrow %}
+                Borrowed by: {{ borrow.borrower.first }} {{ borrow.borrower.last }} ({{ borrow.borrower.tup_id }})<br>
+                Borrowed at: {{ borrow.borrowed_date|date:"H:i m-d-Y" }}<br>
+                
+                Borrowed for: {{ borrow.duration_hours }} hours<br>
+                Due in: {{ borrow.status }}
+                
+            {% else %}
+                Available
+            {% endif %}
+        </p> 
+    </div>
+   
+
+    <a href="{% url 'library:index' %}">Back</a>
+{% endblock %}

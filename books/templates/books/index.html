@@ -1,0 +1,32 @@
+{% extends "books/layout.html" %}
+
+{% block body %}
+    <h1>Library</h1>
+
+<form method="post" action="{% url 'library:index' %}">
+        {% csrf_token %}
+        <label for="tup_id_year">Enrollment Year:</label>
+        <select id="tup_id_year" name="tup_id_year" required>
+            <option value="21">2021</option>
+            <option value="22">2022</option>
+            <option value="23">2023</option>
+            <option value="24">2024</option>
+            <option value="25" selected>2025</option>
+        </select>
+        <label for="tup_id_digits">Student ID (last 4 digits):</label>
+        <input type="text" id="tup_id_digits" name="tup_id_digits" required>
+        <button type="submit">View History</button>
+    </form>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    <ul>
+        {% for book in books %}
+            <li>
+                <a href="{% url 'library:book' book.id%}">{{book.title}} - {{book.status}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
