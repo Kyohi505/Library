@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book, Borrow
+from .models import Book, Borrow, Student
 from django.utils import timezone
 
 class BookDetailsSerializer(serializers.ModelSerializer):
@@ -40,10 +40,10 @@ class LibraryBooksSerializer(serializers.ModelSerializer):
 class StudentHistorySerializer(serializers.ModelSerializer):
     book_title = serializers.CharField(source='borrowing.title')
     status = serializers.SerializerMethodField()
-
+    borrower_name = serializers.SerializerMethodField()
     class Meta:
         model = Borrow
-        fields = ["book_title", "borrowed_date", "due_date", "status", "duration_hours"]
+        fields = ["borrower_name", "book_title", "borrowed_date", "due_date", "status", "duration_hours"]
         
     def get_status(self, obj):    
         if obj.returned:
@@ -52,4 +52,11 @@ class StudentHistorySerializer(serializers.ModelSerializer):
         if hours_left <= 0:
             return "Overdue"
         return f"{hours_left:.1f}hr left"
+    
+    def get_borrower_name(self, obj):
+        try:
+            student = Student.objects.get(tup_id=obj.borrower.tup_id)
+            return student.first.strip() or obj.borrower.tup_id
+        except Student.DoesNotExist:
+            return obj.borrower.tup_idW
         
