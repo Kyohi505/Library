@@ -10,7 +10,7 @@ from .models import Borrow, Book, Student
 from rest_framework import generics
 from .serializers import BookDetailsSerializer, LibraryBooksSerializer, StudentHistorySerializer
 
-# Create your views here.
+# Create your views here.   
 
 class BookListsView(generics.ListAPIView):
    queryset = Book.objects.all()
